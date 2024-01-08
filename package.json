@@ -9,10 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@runonbitcoin/nimble": "^1.0.14",
     "@vercel/kv": "^1.0.1",
     "next": "14.0.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "txforge": "^2.1.0"
   },
   "devDependencies": {
     "eslint": "^8",
