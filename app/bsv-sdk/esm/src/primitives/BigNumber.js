@@ -1425,13 +1425,12 @@ export default class BigNumber {
         // a.length > b.length
         let a, b;
         if (this.length > num.length) {
-            /* eslint-disable @typescript-eslint/no-this-alias */
             a = this;
             b = num;
         }
         else {
             a = num;
-            /* eslint-disable @typescript-eslint/no-this-alias */
+            
             b = this;
         }
         let carry = 0;
@@ -1529,13 +1528,13 @@ export default class BigNumber {
         // a > b
         let a, b;
         if (cmp > 0) {
-            /* eslint-disable @typescript-eslint/no-this-alias */
+            
             a = this;
             b = num;
         }
         else {
             a = num;
-            /* eslint-disable @typescript-eslint/no-this-alias */
+            
             b = this;
         }
         let carry = 0;
@@ -2381,7 +2380,7 @@ export default class BigNumber {
         if (w.length === 0)
             return new BigNumber(1);
         // Skip leading zeroes
-        /* eslint-disable @typescript-eslint/no-this-alias */
+        
         let res = this;
         let i = 0;
         for (; i < w.length; i++, res = res.sqr()) {

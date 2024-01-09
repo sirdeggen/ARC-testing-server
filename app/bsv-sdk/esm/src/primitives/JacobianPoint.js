@@ -218,7 +218,7 @@ export default class JacobianPoint extends BasePoint {
         if (typeof pow === 'undefined') {
             return this.dbl();
         }
-        /* eslint-disable @typescript-eslint/no-this-alias */
+        
         let r = this;
         for (let i = 0; i < pow; i++) {
             r = r.dbl();

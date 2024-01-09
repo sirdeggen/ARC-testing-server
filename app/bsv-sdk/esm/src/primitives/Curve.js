@@ -922,7 +922,7 @@ export default class Curve {
             return globalCurve;
         }
         else {
-            /* eslint-disable @typescript-eslint/no-this-alias */
+            
             globalCurve = this;
         }
         const conf = {

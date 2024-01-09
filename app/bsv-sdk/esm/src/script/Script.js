@@ -118,7 +118,6 @@ export default class Script {
         while (!br.eof()) {
             const op = br.readUInt8();
             let len = 0;
-            // eslint-disable-next-line @typescript-eslint/no-shadow
             let data = [];
             if (op > 0 && op < OP.OP_PUSHDATA1) {
                 len = op;

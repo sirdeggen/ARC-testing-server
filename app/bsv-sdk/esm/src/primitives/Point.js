@@ -521,7 +521,7 @@ export default class Point extends BasePoint {
      * const doubledPoint = p.dblp(10); // returns the point after "doubled" 10 times
      */
     dblp(k) {
-        /* eslint-disable @typescript-eslint/no-this-alias */
+        
         let r = this;
         for (let i = 0; i < k; i++) {
             r = r.dbl();
@@ -782,7 +782,7 @@ export default class Point extends BasePoint {
             return this.precomputed.doubles;
         }
         const doubles = [this];
-        /* eslint-disable @typescript-eslint/no-this-alias */
+        
         let acc = this;
         for (let i = 0; i < power; i += step) {
             for (let j = 0; j < step; j++) {
