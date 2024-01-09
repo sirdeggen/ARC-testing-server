@@ -40,10 +40,7 @@ export async function GET(req, res) {
 
         // get a value from vercel kvs
         const utxos = await kv?.get('utxos')
-        console.log({ utxos })
         const utxo = utxos.shift()
-        console.log({ utxo })
-
         const sourceTransaction = Transaction.fromHex(utxo)
 
         const p2pkh = new P2PKH()
@@ -63,11 +60,10 @@ export async function GET(req, res) {
         const rawtx = tx.toHex()
         const ef = tx.toHexEF()
         const txid = tx.id('hex')
-        console.log({ txid, ef })
+        console.log({ txid, rawtx })
 
         // save the new utxos and any unused ones
-        const newUtxo = rawtx
-        utxos.push(newUtxo)
+        utxos.push(rawtx)
 
         await kv.set('utxos', utxos)
 
