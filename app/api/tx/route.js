@@ -1,23 +1,22 @@
 export const dynamic = 'force-dynamic'
 import { kv } from '@vercel/kv'
 import { createKysely } from '@vercel/postgres-kysely'
-import { PrivateKey } from '@bsv/sdk'
+import { Transaction, PrivateKey, P2PKH, BigNumber } from '@bsv/sdk'
+const { PRIVHEX, TAAL_KEY } = process.env
 
-const apiKey = process.env.TAAL_KEY
-const wif = process.env.WIF
+const privkey = PrivateKey.fromString(PRIVHEX, 16)
+const h = BigNumber.fromHex('d1aa47165f58d8ddc2be987a41c9ad4609b9a912', 'le')
+const pkh = h.toArray('le', 20)
 
-const privkey = PrivateKey.fromString(wif)
-const a = privkey.toPublic()
-
-async function broadcastToARC(endpoint, efHex, apiKey) {
-    console.log({ broadcastToARC: { endpoint, efHex, apiKey } })
+async function broadcastToARC(endpoint, efHex) {
+    console.log({ broadcastToARC: { endpoint, efHex } })
     let status, data
     try {
         const options = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${apiKey}`,
+                Authorization: `Bearer ${TAAL_KEY}`,
                 'X-CallbackUrl': 'https://arctic.xn--nda.network/api/callback',
             },
             body: `{ "rawTx": "${efHex}" }`,
@@ -44,20 +43,28 @@ export async function GET(req, res) {
         const utxo = utxos.shift()
         console.log({ utxo })
 
-        const outputSats = utxo.satoshis - 2
-        const u = toUTXO(utxo)
-        const input = P2PKH.unlock(u, { privkey })
-        const output = P2PKH.lock(outputSats, { address: a })
+        const sourceTransaction = Transaction.fromHex(utxo)
+        
+        const tx = new Transaction()
+        tx.addInput({
+            sourceTransaction,
+            sourceOutputIndex: 0,   
+            unlockingScriptTemplate: new P2PKH().unlock(privkey),
+        })
+        tx.addOutput({
+            lockingScript: new P2PKH().lock(pkh),
+            change: true
+        })
+        await tx.fee({ computeFee: () => 2 })
+        await tx.sign()
+        const rawtx = tx.toHex()
+        const ef = tx.toHexEF()
+        const txid = tx.id()
 
-        const inputs = [input]
-        const outputs = [output]
-        const { ef, tx } = forgeEfTx({ inputs, outputs })
-        const txid = tx.hash
-
-        console.log({ txid })
+        console.log({ txid, ef })
 
         // save the new utxos and any unused ones
-        const newUtxo = { txid, vout: 0, satoshis: utxo.satoshis - 2, script: utxo.script }
+        const newUtxo = rawtx
         utxos.push(newUtxo)
 
         await kv.set('utxos', utxos)
@@ -67,7 +74,7 @@ export async function GET(req, res) {
             status: http_status,
             data,
             error: arcError,
-        } = await broadcastToARC('https://api.taal.com/arc/v1/tx', ef.toString('hex'), apiKey)
+        } = await broadcastToARC('https://api.taal.com/arc/v1/tx', efHex)
 
         let extra_info = '',
             arc_status = '',
