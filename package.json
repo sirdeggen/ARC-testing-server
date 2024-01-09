@@ -9,14 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@runonbitcoin/nimble": "^1.0.14",
     "@vercel/kv": "^1.0.1",
+    "@vercel/postgres": "^0.5.1",
+    "@vercel/postgres-kysely": "^0.6.0",
+    "kysely": "^0.27.2",
     "next": "14.0.4",
     "react": "^18",
-    "react-dom": "^18",
-    "txforge": "^2.1.0"
+    "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/react": "18.2.47",
     "eslint": "^8",
     "eslint-config-next": "14.0.4"
   }
