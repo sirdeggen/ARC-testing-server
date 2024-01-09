@@ -1,12 +1,8 @@
 export const dynamic = 'force-dynamic'
 import { kv } from '@vercel/kv'
 import { createKysely } from '@vercel/postgres-kysely'
-import { Transaction, PrivateKey, P2PKH, BigNumber } from '@bsv/sdk'
+import { Transaction, PrivateKey, P2PKH, BigNumber } from '@/app/bsv-sdk/esm/mod'
 const { PRIVHEX, TAAL_KEY } = process.env
-
-const privkey = PrivateKey.fromString(PRIVHEX, 16)
-const h = BigNumber.fromHex('d1aa47165f58d8ddc2be987a41c9ad4609b9a912', 'le')
-const pkh = h.toArray('le', 20)
 
 async function broadcastToARC(endpoint, efHex) {
     console.log({ broadcastToARC: { endpoint, efHex } })
@@ -34,6 +30,11 @@ async function broadcastToARC(endpoint, efHex) {
 
 export async function GET(req, res) {
     try {
+        const privkey = PrivateKey.fromString(PRIVHEX, 16)
+        const h = BigNumber.fromHex('d1aa47165f58d8ddc2be987a41c9ad4609b9a912', 'le')
+        const pkh = h.toArray('le', 20)
+        console.log({ privkey, at: 'start'})
+
         const time = Date.now()
         // grab a utxo from the key value store
 
@@ -44,35 +45,24 @@ export async function GET(req, res) {
         console.log({ utxo })
 
         const sourceTransaction = Transaction.fromHex(utxo)
+
+        const p2pkh = new P2PKH()
         
         const tx = new Transaction()
         tx.addInput({
             sourceTransaction,
             sourceOutputIndex: 0,   
-            unlockingScriptTemplate: new P2PKH().unlock(privkey),
+            unlockingScriptTemplate: p2pkh.unlock(privkey),
         })
         tx.addOutput({
-            lockingScript: new P2PKH().lock(pkh),
+            lockingScript: p2pkh.lock(pkh),
             change: true
         })
-        await tx.fee({ computeFee: () => 2 })
+        await tx.fee()
         await tx.sign()
-        // causes this error:
-        // {
-        //   error: TypeError: Cannot read properties of null (reading 'fromRed')
-        //   at ro.getX (/Users/deggen/git/ARC-testing-server/.next/server/app/api/tx/route.js:2:201495)
-        //   at ro.encode (/Users/deggen/git/ARC-testing-server/.next/server/app/api/tx/route.js:2:200097)
-        //   at Object.sign (/Users/deggen/git/ARC-testing-server/.next/server/app/api/tx/route.js:9:976)
-        //   at rk.sign (/Users/deggen/git/ARC-testing-server/.next/server/app/api/tx/route.js:9:6820)
-        //   at rT (/Users/deggen/git/ARC-testing-server/.next/server/app/api/tx/route.js:9:11783)
-        //   at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-        //   at async /Users/deggen/git/ARC-testing-server/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:41960
-        // }q
-        // how to fix below
         const rawtx = tx.toHex()
         const ef = tx.toHexEF()
-        const txid = tx.id()
-
+        const txid = tx.id('hex')
         console.log({ txid, ef })
 
         // save the new utxos and any unused ones
@@ -86,7 +76,7 @@ export async function GET(req, res) {
             status: http_status,
             data,
             error: arcError,
-        } = await broadcastToARC('https://api.taal.com/arc/v1/tx', efHex)
+        } = await broadcastToARC('https://api.taal.com/arc/v1/tx', ef)
 
         let extra_info = '',
             arc_status = '',
@@ -107,7 +97,7 @@ export async function GET(req, res) {
             .values({ txid, time, http_status, arc_status, arc_title, tx_status, extra_info, error })
             .execute()
 
-        return Response.json({ success: true })
+        return Response.json({ txid, txStatus: tx_status })
     } catch (error) {
         console.log({ error })
         return Response.json({ success: false })
