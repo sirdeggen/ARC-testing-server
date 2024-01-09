@@ -1,4 +1,4 @@
 export async function POST(req, res) {
-    console.log(req?.body || {})
+    console.dir(req?.body || {}, { depth: null })
     res.status(200).end()
 }
