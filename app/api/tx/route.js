@@ -57,6 +57,18 @@ export async function GET(req, res) {
         })
         await tx.fee({ computeFee: () => 2 })
         await tx.sign()
+        // causes this error:
+        // {
+        //   error: TypeError: Cannot read properties of null (reading 'fromRed')
+        //   at ro.getX (/Users/deggen/git/ARC-testing-server/.next/server/app/api/tx/route.js:2:201495)
+        //   at ro.encode (/Users/deggen/git/ARC-testing-server/.next/server/app/api/tx/route.js:2:200097)
+        //   at Object.sign (/Users/deggen/git/ARC-testing-server/.next/server/app/api/tx/route.js:9:976)
+        //   at rk.sign (/Users/deggen/git/ARC-testing-server/.next/server/app/api/tx/route.js:9:6820)
+        //   at rT (/Users/deggen/git/ARC-testing-server/.next/server/app/api/tx/route.js:9:11783)
+        //   at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        //   at async /Users/deggen/git/ARC-testing-server/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:41960
+        // }q
+        // how to fix below
         const rawtx = tx.toHex()
         const ef = tx.toHexEF()
         const txid = tx.id()
