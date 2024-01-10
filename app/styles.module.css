@@ -1,5 +1,4 @@
 .bounding {
-    font-family: sans-serif;
     padding: 1rem;
 }
 
@@ -9,16 +8,32 @@
 }
 
 .table th {
-    padding: 0.5rem;
-    border: 1px solid rgb(0, 0, 0);
-    background-color: rgb(255, 255, 255);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.table td {
+.table td, .table th {
     padding: 0.5rem;
-    border: 1px solid rgb(0, 0, 0);
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .table tr {
-    background-color: rgb(210, 216, 227);
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.table tr:hover{
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.right {
+    text-align: right;
+}
+
+.center {
+    text-align: center;
+}
+
+.left {
+    text-align: left;
 }

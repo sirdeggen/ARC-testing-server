@@ -1,0 +1,15 @@
+html {
+    font-family: sans-serif;
+    background: linear-gradient(100deg, #619de8 0%, #b1c4eb 100%);
+    color: #0e3f68;
+}
+
+a {
+    color: #0e3f68;
+    text-decoration: none;
+}
+
+hr {
+    padding: 10px 0;
+    border: none;
+}

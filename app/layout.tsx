@@ -1,3 +1,4 @@
+import '@/app/global.css'
 export const metadata = {
   title: 'ARC TIC',
   description: 'For Externally Monitoring ARC Responses and Success Rates',
