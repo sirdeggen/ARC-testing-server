@@ -1,6 +1,26 @@
 {
     "crons": [{
       "path": "/api/tx",
-      "schedule": "*/10 * * * * *"
+      "schedule": "*/1 * * * *"
+    },
+    {
+      "path": "/api/tx",
+      "schedule": "*/1 * * * *"
+    },
+    {
+      "path": "/api/tx",
+      "schedule": "*/1 * * * *"
+    },
+    {
+      "path": "/api/tx",
+      "schedule": "*/1 * * * *"
+    },
+    {
+      "path": "/api/tx",
+      "schedule": "*/1 * * * *"
+    },
+    {
+      "path": "/api/tx",
+      "schedule": "*/1 * * * *"
     }]
   }
