@@ -1,20 +1,7 @@
-import { sql } from '@vercel/postgres'
 import styles from '@/app/styles.module.css'
 
-export default async function TransactionTable() {
-    const { rows: groups } = await sql`
-            select tx_status, count(tx_status) as occurences
-            from transactions
-            group by tx_status
-        `
+export default async function TransactionTable({ transactions, groups }) {
     const total = groups.reduce((acc, group) => acc + group.occurences, 0)
-    
-    const result = await sql`
-        select *
-        from transactions
-        where tx_status!='SEEN_ON_NETWORK'
-    `
-    const transactions = result?.rows || []
     return (
         <div>
         <table className={styles.table}>
