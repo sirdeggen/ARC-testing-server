@@ -1,4 +1,5 @@
 export async function POST(req, res) {
-    console.log({ data: req.body })
+    const data = await req.json()
+    console.log({ data })
     return Response.json({ ok: true })
 }

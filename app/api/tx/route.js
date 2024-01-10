@@ -5,7 +5,6 @@ import { Transaction, PrivateKey, P2PKH, BigNumber } from '@/app/bsv-sdk/esm/mod
 const { PRIVHEX, TAAL_KEY } = process.env
 
 async function broadcastToARC(endpoint, efHex) {
-    console.log({ broadcastToARC: { endpoint, efHex } })
     let status, data
     try {
         const options = {
@@ -28,18 +27,16 @@ async function broadcastToARC(endpoint, efHex) {
     }
 }
 
-export async function GET(req, res) {
+export async function GET() {
     try {
         const privkey = PrivateKey.fromString(PRIVHEX, 16)
         const h = BigNumber.fromHex('d1aa47165f58d8ddc2be987a41c9ad4609b9a912', 'le')
         const pkh = h.toArray('le', 20)
-        console.log({ privkey, at: 'start'})
-
         const time = Date.now()
         // grab a utxo from the key value store
 
         // get a value from vercel kvs
-        const utxos = await kv?.get('utxos')
+        const utxos = await kv.get('utxos')
         const utxo = utxos.shift()
         const sourceTransaction = Transaction.fromHex(utxo)
 
@@ -60,7 +57,7 @@ export async function GET(req, res) {
         const rawtx = tx.toHex()
         const ef = tx.toHexEF()
         const txid = tx.id('hex')
-        console.log({ txid, rawtx })
+        console.log({ txid, rawtx, ef })
 
         // save the new utxos and any unused ones
         utxos.push(rawtx)
