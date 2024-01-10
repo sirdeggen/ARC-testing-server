@@ -1,3 +1,4 @@
+import GroupTable from '@/app/comps/GroupTable'
 import TransactionTable from '@/app/comps/TransactionTable'
 import styles from './styles.module.css'
 import { sql } from '@vercel/postgres'
@@ -19,7 +20,13 @@ export default async function IndexPage() {
     const transactions = result?.rows || []
     return (
         <main className={styles.bounding}>
-            <TransactionTable transactions={transactions} groups={groups} />
+            <h1><span href="https://github.com/bitcoin-sv/arc" target="_blank" className={styles.arc}>ARC</span>TIC</h1>
+            <h3>
+                Real World Monitoring Tool for Transaction Broadcasting on the BSV Blockchain.
+            </h3>
+            <GroupTable groups={groups} />
+            <hr />
+            <TransactionTable transactions={transactions} />
         </main>
     )
 }

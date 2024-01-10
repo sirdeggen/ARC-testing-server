@@ -37,3 +37,12 @@
 .left {
     text-align: left;
 }
+
+.arc {
+    margin: 0 0.25rem;
+    padding: 0 0.25rem;
+    background:#0e3f68;
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    cursor: pointer;
+}
