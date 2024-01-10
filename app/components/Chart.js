@@ -1,7 +1,6 @@
 import { BarChart } from "@tremor/react"
 
 export default function Chart({ groups }) {
-    console.log({ groups })
     const setOfCats = new Set()
     const data = groups.reduce((all, group) => {
         const { date: d, tx_status, occurences } = group
@@ -17,14 +16,13 @@ export default function Chart({ groups }) {
     }, [])
 
     const cats = Array.from(setOfCats)
-    console.log({ data, cats })
     return <BarChart 
         data={data}
         index="date"
         categories={cats}
         colors={["lime", "sky", "blue", "yellow", "red", "fuchsia", "purple", "indigo", "orange", "teal", "green", "cyan", "pink", "brown", "gray", "black"]}
-        yAxisWidth={48}
+        yAxisWidth={20}
         stack={true}
-        className="h-80 mt-4"
+        className="h-80 m-4"
     />
 }

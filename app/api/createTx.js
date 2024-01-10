@@ -32,7 +32,7 @@ export default async function createTx() {
         const privkey = PrivateKey.fromString(PRIVHEX, 16)
         const h = BigNumber.fromHex('d1aa47165f58d8ddc2be987a41c9ad4609b9a912', 'le')
         const pkh = h.toArray('le', 20)
-        const time = new Date('12/12/2023').toISOString()
+        const time = new Date().toISOString()
         // grab a utxo from the key value store
         console.log({ privkey })
 
