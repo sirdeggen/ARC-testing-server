@@ -1,5 +1,5 @@
 export async function POST(req, res) {
     const data = await req.json()
     console.log({ data })
-    return Response.json({ ok: 1 })
+    return Response.json({ ok: true })
 }
