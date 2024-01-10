@@ -1,7 +1,7 @@
 import styles from '@/app/styles.module.css'
 
 export default async function GroupTable({ groups }) {
-    const total = groups.reduce((acc, group) => acc + group.occurences, 0)
+    const total = groups.reduce((acc, group) => acc + Number(group.occurences), 0)
     return (
         <div>
             <p>One transaction every 2 minutes will be sent to ARC at TAAL. The response types will be counted below.</p>
