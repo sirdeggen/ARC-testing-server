@@ -1,26 +1,26 @@
 {
     "crons": [{
-      "path": "/api/tx",
+      "path": "/api/tx1",
       "schedule": "*/1 * * * *"
     },
     {
-      "path": "/api/tx",
+      "path": "/api/tx2",
       "schedule": "*/1 * * * *"
     },
     {
-      "path": "/api/tx",
+      "path": "/api/tx3",
       "schedule": "*/1 * * * *"
     },
     {
-      "path": "/api/tx",
+      "path": "/api/tx4",
       "schedule": "*/1 * * * *"
     },
     {
-      "path": "/api/tx",
+      "path": "/api/tx5",
       "schedule": "*/1 * * * *"
     },
     {
-      "path": "/api/tx",
+      "path": "/api/tx6",
       "schedule": "*/1 * * * *"
     }]
   }
