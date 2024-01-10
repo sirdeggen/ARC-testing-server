@@ -38,9 +38,13 @@
     text-align: left;
 }
 
+.h1 {
+    font-size: 2rem;
+}
+
 .arc {
-    margin: 0 0.25rem;
-    padding: 0 0.25rem;
+    margin: 0 0.25rem 0 0;
+    padding: 0 0.4rem;
     background:#0e3f68;
     color: rgb(255, 255, 255);
     text-decoration: none;

@@ -1,10 +1,9 @@
 import styles from '@/app/styles.module.css'
 
-export default async function GroupTable({ groups }) {
-    const total = groups.reduce((acc, group) => acc + Number(group.occurences), 0)
+export default async function GroupTable({ table }) {
+    const total = table.reduce((acc, group) => acc + Number(group.occurences), 0)
     return (
         <div>
-            <p>One transaction every 2 minutes will be sent to ARC at TAAL. The response types will be counted below.</p>
         <table className={styles.table}>
             <thead>
                 <tr>
@@ -26,8 +25,8 @@ export default async function GroupTable({ groups }) {
                 </tr>
             </thead>
             <tbody>
-                {groups.map(group => (
-                    <tr key={group.tx_status}>
+                {table.map((group, idx) => (
+                    <tr key={idx}>
                         <td>
                             <div className={styles.left}>{group.tx_status}</div>
                         </td>
@@ -39,7 +38,7 @@ export default async function GroupTable({ groups }) {
                         </td>
                     </tr>
                 ))}
-                {groups.length === 0 && (
+                {table.length === 0 && (
                     <tr>
                         <td colSpan={7}>
                             <div>No data to display</div>

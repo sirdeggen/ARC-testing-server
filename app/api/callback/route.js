@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import { createKysely } from "@vercel/postgres-kysely"
 
 export async function POST(req, res) {
@@ -7,8 +8,8 @@ export async function POST(req, res) {
         // update database
         const db = createKysely()
         await db
-            .updateTable('transactions')
-            .where('txid', data.txid)
+            .updateTable('txs')
+            .where('txid', '=', data.txid)
             .set('tx_status', data.txStatus)
             .execute()
     }

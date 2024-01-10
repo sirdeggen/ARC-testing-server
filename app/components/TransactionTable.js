@@ -42,9 +42,9 @@ export default async function TransactionTable({ transactions }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {transactions.map(transaction => {
+                    {transactions.map((transaction, idx) => {
                         const timestamp = new Date(transaction.time * 1)
-                        return <tr key={transaction.txid}>
+                        return <tr key={idx}>
                             <td>
                                 <div><a target="_blank" href={`https://whatsonchain.com/tx/${transaction.txid}`}>{transaction.txid.slice(0,8)}...</a></div>
                             </td>

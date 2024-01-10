@@ -1,4 +1,3 @@
-export const dynamic = 'force-dynamic'
 import { kv } from '@vercel/kv'
 import { createKysely } from '@vercel/postgres-kysely'
 import { Transaction, PrivateKey, P2PKH, BigNumber } from '@/app/bsv-sdk/esm/mod'
@@ -33,8 +32,9 @@ export default async function createTx() {
         const privkey = PrivateKey.fromString(PRIVHEX, 16)
         const h = BigNumber.fromHex('d1aa47165f58d8ddc2be987a41c9ad4609b9a912', 'le')
         const pkh = h.toArray('le', 20)
-        const time = Date.now()
+        const time = new Date('12/12/2023').toISOString()
         // grab a utxo from the key value store
+        console.log({ privkey })
 
         // get a value from vercel kvs
         const utxos = await kv.get('utxos')
@@ -85,9 +85,10 @@ export default async function createTx() {
 
         // log the response in a postgres database
 
+        console.log({ txid, time, http_status, arc_status, arc_title, tx_status, extra_info, error })
         const db = createKysely()
         await db
-            .insertInto('transactions')
+            .insertInto('txs')
             .values({ txid, time, http_status, arc_status, arc_title, tx_status, extra_info, error })
             .execute()
 
