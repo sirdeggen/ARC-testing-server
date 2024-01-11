@@ -1,0 +1,3 @@
+export const questionable = ["UNKNOWN", "QUEUED", "RECEIVED"]
+export const success = ["STORED","ANNOUNCED_TO_NETWORK", "REQUESTED_BY_NETWORK","SENT_TO_NETWORK", "ACCEPTED_BY_NETWORK","SEEN_ON_NETWORK", "MINED", "CONFIRMED"]
+export const failure = ["SEEN_IN_ORPHAN_MEMPOOL", "", "REJECTED"]

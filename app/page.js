@@ -3,10 +3,13 @@ import GroupTable from '@/app/components/GroupTable'
 import TransactionTable from '@/app/components/TransactionTable'
 import styles from './styles.module.css'
 import { sql } from '@vercel/postgres'
+import { kv } from '@vercel/kv'
+import { questionable, failure } from '@/app/constants'
 
 export const revalidate = 120
 
 export default async function IndexPage() {
+    const running = await kv.get('running')
     const { rows: groups } = await sql`
             select tx_status, count(tx_status) as occurences, Date(time) as date
             from txs
@@ -22,12 +25,12 @@ export default async function IndexPage() {
     const result = await sql`
         select *
         from txs
-        where tx_status!='SEEN_ON_NETWORK'
+        where tx_status!='SEEN_ON_NETWORK' and tx_status!='MINED' and tx_status!='CONFIRMED' and tx_status!='STORED' and tx_status!='ANNOUNCED_TO_NETWORK' and tx_status!='REQUESTED_BY_NETWORK' and tx_status!='SENT_TO_NETWORK' and tx_status!='ACCEPTED_BY_NETWORK'
     `
     const transactions = result?.rows || []
     return (
         <main className="p-12">
-            <h1><span className={styles.arc}>ARC</span>TIC</h1>
+            <h1><span className={styles.arc}>ARC</span>TIC {!running && <span className={styles.red}>_down_</span>}</h1>
             <h3>
                 Real World Monitoring Tool for Transaction Broadcasting on the BSV Blockchain.
             </h3>

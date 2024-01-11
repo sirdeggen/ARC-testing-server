@@ -50,3 +50,13 @@
     text-decoration: none;
     cursor: pointer;
 }
+
+.green {
+    background: #359700;
+    color: rgb(255, 255, 255);
+}
+
+.red {
+    background: #b51212;
+    color: rgb(255, 255, 255);
+}

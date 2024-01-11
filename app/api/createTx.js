@@ -16,7 +16,7 @@ async function broadcastToARC(endpoint, efHex) {
             body: `{ "rawTx": "${efHex}" }`,
         }
         const response = await fetch(endpoint, options)
-        status = response?.status || 400
+        status = String(response?.status || 400)
         data = await response.json()
         return { status, data }
     } catch (error) {
@@ -29,6 +29,10 @@ async function broadcastToARC(endpoint, efHex) {
 
 export default async function createTx() {
     try {
+        // stop running if we have run in to orphan mempool issues.
+        const running = await kv.get('running')
+        if (!running) return Response.json({ success: false })
+
         const privkey = PrivateKey.fromString(PRIVHEX, 16)
         const h = BigNumber.fromHex('d1aa47165f58d8ddc2be987a41c9ad4609b9a912', 'le')
         const pkh = h.toArray('le', 20)
@@ -78,8 +82,8 @@ export default async function createTx() {
             tx_status = '',
             error = ''
         if (data?.extraInfo) extra_info = data.extraInfo
-        if (data?.arcStatus) arc_status = data.arcStatus
-        if (data?.arcTitle) arc_title = data.arcTitle
+        if (data?.arcStatus) arc_status = data.status
+        if (data?.arcTitle) arc_title = data.title
         if (data?.txStatus) tx_status = data.txStatus
         if (arcError) error = arcError.message()
 
@@ -91,6 +95,10 @@ export default async function createTx() {
             .insertInto('txs')
             .values({ txid, time, http_status, arc_status, arc_title, tx_status, extra_info, error })
             .execute()
+
+        if (tx_status === 'SEEN_IN_ORPHAN_MEMPOOL') {
+            await kv.set('running', 0)
+        }
 
         return Response.json({ txid, txStatus: tx_status })
     } catch (error) {

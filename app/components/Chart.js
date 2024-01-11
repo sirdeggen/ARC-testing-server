@@ -1,4 +1,5 @@
 import { BarChart } from "@tremor/react"
+import { success, questionable, failure } from '@/app/constants'
 
 export default function Chart({ groups }) {
     const setOfCats = new Set()
@@ -19,10 +20,10 @@ export default function Chart({ groups }) {
     return <BarChart 
         data={data}
         index="date"
-        categories={cats}
-        colors={["lime", "sky", "blue", "yellow", "red", "fuchsia", "purple", "indigo", "orange", "teal", "green", "cyan", "pink", "brown", "gray", "black"]}
-        yAxisWidth={20}
+        categories={["UNKNOWN", "QUEUED", "RECEIVED","STORED","ANNOUNCED_TO_NETWORK", "REQUESTED_BY_NETWORK","SENT_TO_NETWORK", "ACCEPTED_BY_NETWORK","SEEN_ON_NETWORK",  "MINED", "CONFIRMED", "SEEN_IN_ORPHAN_MEMPOOL", "", "REJECTED"]}
+        colors={["black", "gray", "stone", "cyan", "teal", "emerald", "lime", "lime", "green", "green", "sky", "red", "brown", "red"]}
+        yAxisWidth={50}
         stack={true}
-        className="h-80 m-4"
+        className="h-80 my-4"
     />
 }

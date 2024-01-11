@@ -3,7 +3,7 @@ import styles from '@/app/styles.module.css'
 export default async function TransactionTable({ transactions }) {
     return (
         <div>
-            <p>Any unexpected statuses will be captured below for inspection.</p>
+            <h3 className='my-3'>Questionable Responses</h3>
             <table className={styles.table}>
                 <thead>
                     <tr>
