@@ -27,8 +27,9 @@ async function broadcastToARC(endpoint, efHex) {
 }
 
 
-export default async function createTx() {
+export default async function createTx(offset) {
     try {
+        const spendable = 'utxo_' + offset
         // stop running if we have run in to orphan mempool issues.
         const running = await kv.get('running')
         if (!running) return Response.json({ success: false })
@@ -37,11 +38,9 @@ export default async function createTx() {
         const h = BigNumber.fromHex('d1aa47165f58d8ddc2be987a41c9ad4609b9a912', 'le')
         const pkh = h.toArray('le', 20)
         const time = new Date().toISOString()
-        // grab a utxo from the key value store
-        console.log({ privkey })
 
-        // get a value from vercel kvs
-        const utxos = await kv.get('utxos')
+        // grab a utxo from the key value store
+        const utxos = await kv.get(spendable)
         const utxo = utxos.shift()
         const sourceTransaction = Transaction.fromHex(utxo)
 
@@ -62,12 +61,12 @@ export default async function createTx() {
         const rawtx = tx.toHex()
         const ef = tx.toHexEF()
         const txid = tx.id('hex')
-        console.log({ txid, rawtx, ef })
+        console.info({ txid, rawtx, ef })
 
         // save the new utxos and any unused ones
         utxos.push(rawtx)
 
-        await kv.set('utxos', utxos)
+        await kv.set(spendable, utxos)
 
         // send the transaction to ARC
         const {
@@ -96,13 +95,14 @@ export default async function createTx() {
             .values({ txid, time, http_status, arc_status, arc_title, tx_status, extra_info, error })
             .execute()
 
-        if (tx_status === 'SEEN_IN_ORPHAN_MEMPOOL') {
+        if (tx_status === 'SEEN_IN_ORPHAN_MEMPOOL' || tx_status === '') {
             await kv.set('running', 0)
+            console.error('stopped running due to ' + tx_status + ' status for ' + txid + ' attempting to spend ' + spendable)
         }
 
         return Response.json({ txid, txStatus: tx_status })
     } catch (error) {
-        console.log({ error })
+        console.error({ error })
         return Response.json({ success: false })
     }
 }
