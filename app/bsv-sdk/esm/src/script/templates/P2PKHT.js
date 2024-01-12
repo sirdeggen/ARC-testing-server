@@ -9,7 +9,7 @@ import { toArray } from '../../primitives/utils.js';
  *
  * This class provides methods to create Pay To Public Key Hash locking and unlocking scripts, including the unlocking of P2PKH UTXOs with the private key.
  */
-export default class P2PKH {
+export default class P2PKHT {
     /**
      * Creates a P2PKH locking script for a given public key hash.
      *

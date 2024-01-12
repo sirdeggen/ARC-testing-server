@@ -8,7 +8,7 @@ import PrivateKey from '../../primitives/PrivateKey.js';
  *
  * This class provides methods to create Pay To Public Key Hash locking and unlocking scripts, including the unlocking of P2PKH UTXOs with the private key.
  */
-export default class P2PKH implements ScriptTemplate {
+export default class P2PKHT implements ScriptTemplate {
     /**
      * Creates a P2PKH locking script for a given public key hash.
      *
