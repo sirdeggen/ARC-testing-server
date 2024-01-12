@@ -4,27 +4,28 @@ import TransactionTable from '@/app/components/TransactionTable'
 import styles from './styles.module.css'
 import { sql } from '@vercel/postgres'
 import { kv } from '@vercel/kv'
-import { questionable, failure } from '@/app/constants'
+const { NEXT_PUBLIC_ARC_INSTANCE } = process.env
+const txTable = NEXT_PUBLIC_ARC_INSTANCE + '_txs'
 
-export const revalidate = 120
+export const revalidate = 60
 
 export default async function IndexPage() {
     const running = await kv.get('running')
     const { rows: groups } = await sql`
             select tx_status, count(tx_status) as occurences, Date(time) as date
-            from txs
+            from ${txTable}
             group by date, tx_status
         `
 
     const { rows: table } = await sql`
         select tx_status, count(tx_status) as occurences
-        from txs
+        from ${txTable}
         group by tx_status
     `
 
     const result = await sql`
         select *
-        from txs
+        from ${txTable}
         where tx_status!='SEEN_ON_NETWORK' and tx_status!='MINED' and tx_status!='CONFIRMED' and tx_status!='STORED' and tx_status!='ANNOUNCED_TO_NETWORK' and tx_status!='REQUESTED_BY_NETWORK' and tx_status!='SENT_TO_NETWORK' and tx_status!='ACCEPTED_BY_NETWORK'
     `
     const transactions = result?.rows || []

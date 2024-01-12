@@ -1,10 +1,12 @@
 import { kv } from '@vercel/kv'
 import { createKysely } from '@vercel/postgres-kysely'
 import { Transaction, PrivateKey, P2PKH, BigNumber } from '@/app/bsv-sdk/esm/mod'
-const { PRIVHEX, TAAL_KEY } = process.env
+const { PRIVHEX, TAAL_KEY, ARC_URL, NEXT_PUBLIC_ARC_INSTANCE } = process.env
+const txTable = NEXT_PUBLIC_ARC_INSTANCE + '_txs'
 
-async function broadcastToARC(endpoint, efHex) {
+async function broadcastToARC(efHex) {
     let status, data
+    const endpoint = ARC_URL + '/v1/tx'
     try {
         const options = {
             method: 'POST',
@@ -29,7 +31,7 @@ async function broadcastToARC(endpoint, efHex) {
 
 export default async function createTx(offset) {
     try {
-        const spendable = 'utxo_' + offset
+        const spendable = NEXT_PUBLIC_ARC_INSTANCE + '_utxo_' + offset
         // stop running if we have run in to orphan mempool issues.
         const running = await kv.get('running')
         if (!running) return Response.json({ success: false })
@@ -73,7 +75,7 @@ export default async function createTx(offset) {
             status: http_status,
             data,
             error: arcError,
-        } = await broadcastToARC('https://api.taal.com/arc/v1/tx', ef)
+        } = await broadcastToARC(ef)
 
         let extra_info = '',
             arc_status = '',
@@ -91,7 +93,7 @@ export default async function createTx(offset) {
         console.log({ txid, time, http_status, arc_status, arc_title, tx_status, extra_info, error })
         const db = createKysely()
         await db
-            .insertInto('txs')
+            .insertInto(txTable)
             .values({ txid, time, http_status, arc_status, arc_title, tx_status, extra_info, error })
             .execute()
 
