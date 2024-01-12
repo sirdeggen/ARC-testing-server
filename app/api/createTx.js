@@ -15,6 +15,7 @@ async function broadcastToARC(efHex) {
                 'X-CallbackUrl': 'https://arctic.xn--nda.network/api/callback',
             },
             body: `{ "rawTx": "${efHex}" }`,
+            signal: AbortSignal.timeout(10000)
         }
         const response = await fetch(endpoint, options)
         status = String(response?.status || 400)
@@ -44,9 +45,10 @@ export default async function createTx(offset) {
         const utxos = await kv.get(spendable)
         const utxo = utxos.shift()
         const sourceTransaction = Transaction.fromHex(utxo)
+        const sourceTxid = sourceTransaction.id('hex')
 
         const p2pkh = new P2PKHT()
-        
+                
         const tx = new Transaction()
         tx.addInput({
             sourceTransaction,
@@ -62,12 +64,9 @@ export default async function createTx(offset) {
         const rawtx = tx.toHex()
         const ef = tx.toHexEF()
         const txid = tx.id('hex')
-        console.info({ txid, rawtx, ef })
+        console.info({ txid, sourceTxid, rawtx, ef })
 
-        // save the new utxos and any unused ones
-        utxos.push(rawtx)
 
-        await kv.set(spendable, utxos)
 
         // send the transaction to ARC
         const {
@@ -75,6 +74,14 @@ export default async function createTx(offset) {
             data,
             error: arcError,
         } = await broadcastToARC(ef)
+
+        if (arcError?.name === 'TimeoutError') {
+            console.error('ARC request timed out after 10 seconds')
+        } else {
+            // save the new utxos and any unused ones
+            utxos.push(rawtx)
+            await kv.set(spendable, utxos)
+        }
 
         let extra_info = '',
             arc_status = '',
@@ -93,7 +100,7 @@ export default async function createTx(offset) {
         const db = createKysely()
         await db
             .insertInto('txs')
-            .values({ txid, time, http_status, arc_status, arc_title, tx_status, extra_info, error })
+            .values({ txid, sourceTxid, time, http_status, arc_status, arc_title, tx_status, extra_info, error })
             .execute()
 
         if (tx_status === 'SEEN_IN_ORPHAN_MEMPOOL' || tx_status === '') {
