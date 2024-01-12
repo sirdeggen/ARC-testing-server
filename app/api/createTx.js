@@ -1,6 +1,6 @@
 import { kv } from '@vercel/kv'
 import { createKysely } from '@vercel/postgres-kysely'
-import { Transaction, PrivateKey, P2PKH, BigNumber } from '@/app/bsv-sdk/esm/mod'
+import { Transaction, PrivateKey, BigNumber, P2PKHT } from '@/app/bsv-sdk/esm/mod'
 const { PRIVHEX, TAAL_KEY, ARC_URL, NEXT_PUBLIC_ARC_INSTANCE } = process.env
 const txTable = NEXT_PUBLIC_ARC_INSTANCE + '_txs'
 
@@ -46,7 +46,7 @@ export default async function createTx(offset) {
         const utxo = utxos.shift()
         const sourceTransaction = Transaction.fromHex(utxo)
 
-        const p2pkh = new P2PKH()
+        const p2pkh = new P2PKHT()
         
         const tx = new Transaction()
         tx.addInput({
