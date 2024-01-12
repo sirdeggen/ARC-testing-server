@@ -1,7 +1,7 @@
 import { kv } from '@vercel/kv'
 import { createKysely } from '@vercel/postgres-kysely'
 import { Transaction, PrivateKey, BigNumber, P2PKHT } from '@/app/bsv-sdk/esm/mod'
-const { PRIVHEX, TAAL_KEY, ARC_URL, NEXT_PUBLIC_ARC_INSTANCE } = process.env
+const { PRIVHEX, TAAL_KEY, ARC_URL } = process.env
 
 async function broadcastToARC(efHex) {
     let status, data
@@ -30,7 +30,7 @@ async function broadcastToARC(efHex) {
 
 export default async function createTx(offset) {
     try {
-        const spendable = NEXT_PUBLIC_ARC_INSTANCE + '_utxo_' + offset
+        const spendable = 'utxo_' + offset
         // stop running if we have run in to orphan mempool issues.
         const running = await kv.get('running')
         if (!running) return Response.json({ success: false })
@@ -93,7 +93,7 @@ export default async function createTx(offset) {
         const db = createKysely()
         await db
             .insertInto('txs')
-            .values({ txid, time, http_status, arc_status, arc_title, tx_status, extra_info, error, source })
+            .values({ txid, time, http_status, arc_status, arc_title, tx_status, extra_info, error })
             .execute()
 
         if (tx_status === 'SEEN_IN_ORPHAN_MEMPOOL' || tx_status === '') {
