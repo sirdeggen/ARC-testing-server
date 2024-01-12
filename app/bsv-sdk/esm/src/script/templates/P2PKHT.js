@@ -17,7 +17,7 @@ export default class P2PKHT {
      * @returns {LockingScript} - A P2PKH locking script.
      */
     lock(pubkeyhash) {
-        const time = toArray(Date.now());
+        const time = toArray(Date.now().toString());
         return new LockingScript([
             { op: time.length, data: time },
             { op: OP.OP_DROP },
