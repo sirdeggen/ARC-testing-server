@@ -5,7 +5,7 @@ import styles from './styles.module.css'
 import { sql } from '@vercel/postgres'
 import { kv } from '@vercel/kv'
 const { NEXT_PUBLIC_ARC_INSTANCE } = process.env
-const txTable = NEXT_PUBLIC_ARC_INSTANCE + '_txs'
+const source = NEXT_PUBLIC_ARC_INSTANCE
 
 export const revalidate = 60
 
@@ -13,21 +13,24 @@ export default async function IndexPage() {
     const running = await kv.get('running')
     const { rows: groups } = await sql`
             select tx_status, count(tx_status) as occurences, Date(time) as date
-            from ${txTable}
+            from txs
+            where source=${source}
             group by date, tx_status
         `
 
     const { rows: table } = await sql`
         select tx_status, count(tx_status) as occurences
-        from ${txTable}
+        from txs
+        where source=${source}
         group by tx_status
     `
 
     const result = await sql`
         select *
-        from ${txTable}
-        where tx_status!='SEEN_ON_NETWORK' and tx_status!='MINED' and tx_status!='CONFIRMED' and tx_status!='STORED' and tx_status!='ANNOUNCED_TO_NETWORK' and tx_status!='REQUESTED_BY_NETWORK' and tx_status!='SENT_TO_NETWORK' and tx_status!='ACCEPTED_BY_NETWORK'
+        from txs
+        where source=${source} and tx_status!='SEEN_ON_NETWORK' and tx_status!='MINED' and tx_status!='CONFIRMED' and tx_status!='STORED' and tx_status!='ANNOUNCED_TO_NETWORK' and tx_status!='REQUESTED_BY_NETWORK' and tx_status!='SENT_TO_NETWORK' and tx_status!='ACCEPTED_BY_NETWORK'
     `
+
     const transactions = result?.rows || []
     return (
         <main className="p-12">
