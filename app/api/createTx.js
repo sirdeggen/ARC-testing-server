@@ -1,7 +1,7 @@
 import { kv } from '@vercel/kv'
 import { createKysely } from '@vercel/postgres-kysely'
 import { Transaction, PrivateKey, BigNumber, P2PKHT } from '@/app/bsv-sdk/esm/mod'
-const { PRIVHEX, TAAL_KEY, ARC_URL } = process.env
+const { PRIVHEX, PUBKEYHASH, TAAL_KEY, ARC_URL } = process.env
 
 async function broadcastToARC(efHex) {
     let status, data
@@ -36,7 +36,7 @@ export default async function createTx(offset) {
         if (!running) return Response.json({ success: false })
 
         const privkey = PrivateKey.fromString(PRIVHEX, 16)
-        const h = BigNumber.fromHex('d1aa47165f58d8ddc2be987a41c9ad4609b9a912', 'le')
+        const h = BigNumber.fromHex(PUBKEYHASH, 'le')
         const pkh = h.toArray('le', 20)
         const time = new Date().toISOString()
 
