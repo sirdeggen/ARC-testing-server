@@ -2,7 +2,6 @@ import { kv } from '@vercel/kv'
 import { createKysely } from '@vercel/postgres-kysely'
 import { Transaction, PrivateKey, BigNumber, P2PKHT } from '@/app/bsv-sdk/esm/mod'
 const { PRIVHEX, TAAL_KEY, ARC_URL, NEXT_PUBLIC_ARC_INSTANCE } = process.env
-const txTable = NEXT_PUBLIC_ARC_INSTANCE + '_txs'
 
 async function broadcastToARC(efHex) {
     let status, data
@@ -93,8 +92,8 @@ export default async function createTx(offset) {
         console.log({ txid, time, http_status, arc_status, arc_title, tx_status, extra_info, error })
         const db = createKysely()
         await db
-            .insertInto(txTable)
-            .values({ txid, time, http_status, arc_status, arc_title, tx_status, extra_info, error })
+            .insertInto('txs')
+            .values({ txid, time, http_status, arc_status, arc_title, tx_status, extra_info, error, source })
             .execute()
 
         if (tx_status === 'SEEN_IN_ORPHAN_MEMPOOL' || tx_status === '') {
