@@ -24,7 +24,7 @@ export default async function IndexPage() {
     const result = await sql`
         select *
         from txs
-        where tx_status='SEEN_ON_NETWORK' and tx_status!='MINED' and tx_status!='CONFIRMED' and tx_status!='STORED' and tx_status!='ANNOUNCED_TO_NETWORK' and tx_status!='REQUESTED_BY_NETWORK' and tx_status!='SENT_TO_NETWORK' and tx_status!='ACCEPTED_BY_NETWORK'
+        where tx_status!='SEEN_ON_NETWORK' and tx_status!='MINED' and tx_status!='CONFIRMED' and tx_status!='STORED' and tx_status!='ANNOUNCED_TO_NETWORK' and tx_status!='REQUESTED_BY_NETWORK' and tx_status!='SENT_TO_NETWORK' and tx_status!='ACCEPTED_BY_NETWORK'
     `
 
     const transactions = result?.rows || []
