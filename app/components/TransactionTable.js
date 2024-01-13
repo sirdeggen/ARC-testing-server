@@ -20,12 +20,12 @@ export default async function TransactionTable({ transactions }) {
                         <th
                             scope="col"
                                                    >
-                            Https Status
+                            SourceTxid
                         </th>
                         <th
                             scope="col"
                                                    >
-                            Arc Status
+                            Https Status
                         </th>
                         <th
                             scope="col"
@@ -52,10 +52,10 @@ export default async function TransactionTable({ transactions }) {
                                 <div>{timestamp.toLocaleTimeString()} - {timestamp.toLocaleDateString()}</div>
                             </td>
                             <td>
-                                <div>{transaction.https_status}</div>
+                                <div><a target="_blank" href={`https://whatsonchain.com/tx/${transaction.sourceTxid}`}>{transaction.sourceTxid?.slice(0,8)}...</a></div>
                             </td>
                             <td>
-                                <div>{transaction.arc_status}</div>
+                                <div>{transaction.http_status}</div>
                             </td>
                             <td>
                                 <div>{transaction.arc_title}</div>
