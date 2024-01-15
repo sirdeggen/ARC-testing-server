@@ -75,6 +75,17 @@ export default async function createTx(offset) {
             error: arcError,
         } = await broadcastToARC(ef)
 
+        let extra_info = '',
+            arc_status = '',
+            arc_title = '',
+            tx_status = '',
+            error = ''
+        if (data?.extraInfo) extra_info = data.extraInfo
+        if (data?.arcStatus) arc_status = data.status
+        if (data?.arcTitle) arc_title = data.title
+        if (data?.txStatus) tx_status = data.txStatus
+        if (arcError) error = arcError.toString()
+
         if (arcError?.name === 'TimeoutError') {
             console.error('ARC request timed out after 10 seconds, we will save both old and new utxos and try again.')
             utxos.push(utxo)
@@ -87,17 +98,6 @@ export default async function createTx(offset) {
             console.log('tx was rejected, removing unspendable utxo: ', sourceTxid)
         }
         await kv.set(spendable, utxos)
-
-        let extra_info = '',
-            arc_status = '',
-            arc_title = '',
-            tx_status = '',
-            error = ''
-        if (data?.extraInfo) extra_info = data.extraInfo
-        if (data?.arcStatus) arc_status = data.status
-        if (data?.arcTitle) arc_title = data.title
-        if (data?.txStatus) tx_status = data.txStatus
-        if (arcError) error = arcError.toString()
 
         // log the response in a postgres database
 
