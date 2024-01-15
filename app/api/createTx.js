@@ -76,12 +76,17 @@ export default async function createTx(offset) {
         } = await broadcastToARC(ef)
 
         if (arcError?.name === 'TimeoutError') {
-            console.error('ARC request timed out after 10 seconds')
-        } else {
-            // save the new utxos and any unused ones
+            console.error('ARC request timed out after 10 seconds, we will save both old and new utxos and try again.')
+            utxos.push(utxo)
             utxos.push(rawtx)
-            await kv.set(spendable, utxos)
+        } else if (tx_status !== 'REJECTED') {
+            // so long as it wasn't outright rejected, we will save the new utxo.
+            utxos.push(rawtx)
+        } else {
+            // there was no timeout and we did get rejected then just save the ramaining utxo array.
+            console.log('tx was rejected, removing unspendable utxo: ', sourceTxid)
         }
+        await kv.set(spendable, utxos)
 
         let extra_info = '',
             arc_status = '',
