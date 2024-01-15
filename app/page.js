@@ -18,6 +18,7 @@ export default async function IndexPage() {
     const { rows: table } = await sql`
         select tx_status, count(tx_status) as occurences
         from txs
+        where time >= NOW() - '1 day'::INTERVAL
         group by tx_status
     `
 
@@ -31,11 +32,12 @@ export default async function IndexPage() {
     return (
         <main className="p-12">
             <h1><span className={styles.arc}>ARC</span>TIC {!running && <span className={styles.red}>_down_</span>}</h1>
-            <h3>
-                Real World Monitoring Tool for Transaction Broadcasting on the BSV Blockchain.
+            <h3 className='font-semibold'>
+                Monitoring Tool for Transaction Broadcasting on the BSV Blockchain
             </h3>
-            <p>One transaction every 10 seconds will be sent to ARC at TAAL. The response types will be counted below.</p>
+            <p className='mt-1 mb-7'>One transaction every 10 seconds will be sent to ARC at TAAL. The response types will be counted below, any errors will be detailed until their cause is resolved. The aim is to achieve 99.9% SUCCESS rate.</p>
             <Chart groups={groups} />
+            <hr />
             <GroupTable table={table} />
             <hr />
             <TransactionTable transactions={transactions} />

@@ -1,3 +1,6 @@
 export const questionable = ["UNKNOWN", "QUEUED", "RECEIVED"]
 export const success = ["STORED","ANNOUNCED_TO_NETWORK", "REQUESTED_BY_NETWORK","SENT_TO_NETWORK", "ACCEPTED_BY_NETWORK","SEEN_ON_NETWORK", "MINED", "CONFIRMED"]
 export const failure = ["SEEN_IN_ORPHAN_MEMPOOL", "", "REJECTED"]
+export const resolved = ["ERROR_RESOLVED"]
+export const all = ["UNKNOWN", "QUEUED", "RECEIVED","STORED","ANNOUNCED_TO_NETWORK", "REQUESTED_BY_NETWORK","SENT_TO_NETWORK", "ACCEPTED_BY_NETWORK","SEEN_ON_NETWORK",  "MINED", "CONFIRMED", "SEEN_IN_ORPHAN_MEMPOOL", "", "REJECTED", "ERROR_RESOLVED"]
+export const allColors = ["black", "gray", "stone", "cyan", "teal", "emerald", "lime", "lime", "green", "green", "sky", "red", "brown", "red", "neutral"]

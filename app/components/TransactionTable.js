@@ -3,7 +3,7 @@ import styles from '@/app/styles.module.css'
 export default async function TransactionTable({ transactions }) {
     return (
         <div>
-            <h3 className='my-3'>Questionable Responses</h3>
+            <h3 className='my-3 font-semibold'>Unresolved Questionable Responses and Failures, for Investigation</h3>
             <table className={styles.table}>
                 <thead>
                     <tr>
