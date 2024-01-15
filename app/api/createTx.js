@@ -92,7 +92,7 @@ export default async function createTx(offset) {
         if (data?.arcStatus) arc_status = data.status
         if (data?.arcTitle) arc_title = data.title
         if (data?.txStatus) tx_status = data.txStatus
-        if (arcError) error = arcError.message()
+        if (arcError) error = arcError.toString()
 
         // log the response in a postgres database
 
