@@ -88,6 +88,7 @@ export default async function createTx(offset) {
 
         if (arcError?.name === 'TimeoutError') {
             console.error('ARC request timed out after 10 seconds, we will save both old and new utxos and try again.')
+            extra_info = 'Request timed out after 10s'
             utxos.push(utxo)
             utxos.push(rawtx)
         } else if (tx_status !== 'REJECTED') {
