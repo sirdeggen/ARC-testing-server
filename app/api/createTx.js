@@ -108,7 +108,7 @@ export default async function createTx(offset) {
             .values({ txid, sourceTxid, time, http_status, arc_status, arc_title, tx_status, extra_info, error })
             .execute()
 
-        if (tx_status === 'SEEN_IN_ORPHAN_MEMPOOL' || tx_status === '') {
+        if (tx_status === 'SEEN_IN_ORPHAN_MEMPOOL') {
             await kv.set('running', 0)
             console.error('stopped running due to ' + tx_status + ' status for ' + txid + ' attempting to spend ' + spendable)
         }
