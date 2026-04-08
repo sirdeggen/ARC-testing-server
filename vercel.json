@@ -2,25 +2,5 @@
     "crons": [{
       "path": "/api/tx1",
       "schedule": "*/1 * * * *"
-    },
-    {
-      "path": "/api/tx2",
-      "schedule": "*/1 * * * *"
-    },
-    {
-      "path": "/api/tx3",
-      "schedule": "*/1 * * * *"
-    },
-    {
-      "path": "/api/tx4",
-      "schedule": "*/1 * * * *"
-    },
-    {
-      "path": "/api/tx5",
-      "schedule": "*/1 * * * *"
-    },
-    {
-      "path": "/api/tx6",
-      "schedule": "*/1 * * * *"
     }]
   }
