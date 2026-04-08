@@ -1,6 +1,6 @@
 import { kv } from '@vercel/kv'
 import { createKysely } from '@vercel/postgres-kysely'
-import { Transaction, PrivateKey, BigNumber, P2PKHT } from '@/app/bsv-sdk/esm/mod'
+import { Transaction, PrivateKey, BigNumber, P2PKHT, SatsPerKiloByte } from '@/app/bsv-sdk/esm/mod'
 const { PRIVHEX, PUBKEYHASH, TAAL_KEY, ARC_URL } = process.env
 
 async function broadcastToARC(efHex) {
@@ -59,7 +59,7 @@ export default async function createTx(offset) {
             lockingScript: p2pkh.lock(pkh),
             change: true
         })
-        await tx.fee()
+        await tx.fee(new SatsPerKiloByte(100))
         await tx.sign()
         const rawtx = tx.toHex()
         const ef = tx.toHexEF()
