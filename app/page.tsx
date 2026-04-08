@@ -30,17 +30,39 @@ export default async function IndexPage() {
 
     const transactions = result?.rows || []
     return (
-        <main className="p-12">
-            <h1><span className={styles.arc}>ARC</span>TIC {!running && <span className={styles.red}>_down_</span>}</h1>
-            <h3 className='font-semibold'>
-                Monitoring Tool for Transaction Broadcasting on the BSV Blockchain
-            </h3>
-            <p className='mt-1 mb-7'>One transaction every 10 seconds will be sent to ARC at TAAL. The response types will be counted below, any errors will be detailed until their cause is resolved. The aim is to achieve 99.9% SUCCESS rate.</p>
-            <Chart groups={groups as any} />
-            <hr />
-            <GroupTable table={table as any} />
-            <hr />
-            <TransactionTable transactions={transactions as any} />
+        <main className="min-h-screen px-4 py-8 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            {/* Header */}
+            <header className="mb-8">
+                <div className="flex items-center gap-3 mb-2">
+                    <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+                        <span className={styles.arc}>ARC</span>TIC
+                    </h1>
+                    {running
+                        ? <span className={styles.green}>online</span>
+                        : <span className={styles.red}>offline</span>
+                    }
+                </div>
+                <p className="text-sm sm:text-base text-slate-400 max-w-2xl leading-relaxed">
+                    Monitoring transaction broadcasting on the BSV Blockchain.
+                    One transaction per minute sent to ARC, targeting 99.9% success rate.
+                </p>
+            </header>
+
+            {/* Chart Section */}
+            <section className={`${styles.card} mb-6`}>
+                <h2 className="text-lg font-semibold mb-4 text-slate-200">Transaction History</h2>
+                <Chart groups={groups as any} />
+            </section>
+
+            {/* Stats Section */}
+            <section className="mb-6">
+                <GroupTable table={table as any} />
+            </section>
+
+            {/* Errors Section */}
+            <section className={`${styles.card}`}>
+                <TransactionTable transactions={transactions as any} />
+            </section>
         </main>
     )
 }

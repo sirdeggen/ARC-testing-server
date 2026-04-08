@@ -1,31 +1,66 @@
 @import "tailwindcss";
 
+@theme {
+    --color-navy: #0e3f68;
+    --color-navy-light: #1a5a8f;
+    --color-success: #22c55e;
+    --color-danger: #ef4444;
+    --color-warning: #f59e0b;
+    --color-muted: #94a3b8;
+    --color-glass: rgba(255, 255, 255, 0.6);
+    --color-glass-hover: rgba(255, 255, 255, 0.75);
+    --color-glass-border: rgba(255, 255, 255, 0.3);
+}
+
 html {
-    font-family: sans-serif;
-    background: linear-gradient(100deg, #cfdbe9 0%, #dee6f7 100%);
-    color: #0e3f68;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    color: #e2e8f0;
+    min-height: 100vh;
+}
+
+body {
+    min-height: 100vh;
 }
 
 a {
-    color: #0e3f68;
+    color: #60a5fa;
     text-decoration: none;
+    transition: color 0.15s;
 }
 
-hr {
-    padding: 10px 0;
-    border: none;
+a:hover {
+    color: #93bbfd;
 }
 
-h1 {
-  font-size: 2rem;
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.3);
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.5);
 }
 
-h3 {
-  font-size: 1.1rem;
+/* Recharts tooltip override */
+.recharts-default-tooltip {
+    background: rgba(15, 23, 42, 0.9) !important;
+    border: 1px solid rgba(148, 163, 184, 0.2) !important;
+    border-radius: 8px !important;
+    backdrop-filter: blur(12px) !important;
+    color: #e2e8f0 !important;
 }
-
-thead th {
-  position: sticky;
-  top: 0px;
-  background-color: rgba(255, 255, 255, 0.5);
+.recharts-tooltip-item {
+    color: #e2e8f0 !important;
+}
+.recharts-legend-item-text {
+    color: #94a3b8 !important;
+    font-size: 0.7rem !important;
 }

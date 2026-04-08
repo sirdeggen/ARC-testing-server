@@ -6,6 +6,13 @@ interface TableRow {
     occurences: string
 }
 
+const STAT_CONFIG = [
+    { label: 'Success', color: 'bg-emerald-500/20 text-emerald-400', icon: '●' },
+    { label: 'Resolved', color: 'bg-slate-500/20 text-slate-400', icon: '●' },
+    { label: 'Questionable', color: 'bg-amber-500/20 text-amber-400', icon: '●' },
+    { label: 'Failure', color: 'bg-red-500/20 text-red-400', icon: '●' },
+]
+
 export default async function GroupTable({ table }: { table: TableRow[] }) {
     const total = table.reduce((acc, group) => acc + Number(group.occurences), 0)
     const stats = table.reduce((acc, group) => {
@@ -28,40 +35,36 @@ export default async function GroupTable({ table }: { table: TableRow[] }) {
 
     return (
         <div>
-            <h3 className='my-3 font-semibold'>Success Rate (Last 24h)</h3>
-        <table className={styles.table}>
-            <thead>
-                <tr>
-                    <th scope="col" className={styles.left}>Status</th>
-                    <th scope="col" className={styles.center}>Count</th>
-                    <th scope="col" className={styles.right}>% of Total</th>
-                </tr>
-            </thead>
-            <tbody>
+            <h2 className="text-lg font-semibold mb-4 text-slate-200">Last 24 Hours</h2>
+            <div className={styles.statGrid}>
                 {stats.map((group, idx) => {
-                    const rate = Number(100 * group.occurences / total)
+                    const rate = total > 0 ? Number(100 * group.occurences / total) : 0
+                    const config = STAT_CONFIG[idx]
                     return (
-                        <tr key={idx}>
-                            <td>
-                                <div className={styles.left}>{group.status}</div>
-                            </td>
-                            <td>
-                                <div className={styles.center}>{group.occurences}</div>
-                            </td>
-                            <td className={Math.round(rate * 10) >= 999 ? styles.success : ''}>
-                                <div className={styles.right}>{rate.toPrecision(3)} %</div>
-                            </td>
-                        </tr>)
+                        <div key={idx} className={styles.card}>
+                            <div className="flex items-center gap-2 mb-3">
+                                <span className={`inline-flex items-center justify-center w-6 h-6 rounded-md text-xs ${config.color}`}>
+                                    {config.icon}
+                                </span>
+                                <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                                    {config.label}
+                                </span>
+                            </div>
+                            <div className="text-2xl font-bold text-slate-100 tabular-nums">
+                                {group.occurences.toLocaleString()}
+                            </div>
+                            <div className="text-xs text-slate-500 mt-1 tabular-nums">
+                                {rate.toPrecision(3)}% of total
+                            </div>
+                        </div>
+                    )
                 })}
-                {table.length === 0 && (
-                    <tr>
-                        <td colSpan={7}>
-                            <div>No data to display</div>
-                        </td>
-                    </tr>
-                )}
-            </tbody>
-        </table>
+            </div>
+            {table.length === 0 && (
+                <div className={`${styles.card} mt-3 text-center text-slate-500 text-sm`}>
+                    No data to display
+                </div>
+            )}
         </div>
     )
 }
